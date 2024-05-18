@@ -1,0 +1,6 @@
+@TP_A16_BrunoD_WebAPI_HostAddress = http://localhost:5023
+
+GET {{TP_A16_BrunoD_WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
