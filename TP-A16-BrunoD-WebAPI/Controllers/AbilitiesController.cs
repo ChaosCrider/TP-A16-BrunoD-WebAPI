@@ -42,6 +42,17 @@ namespace TP_A16_BrunoD_WebAPI.Controllers
             return ability;
         }
 
+        //GET: api/Abilities/Beast/5
+        [HttpGet("Beast/{id}")]
+        public async Task<ActionResult<List<Ability>>> GetAbilitiesByBeast(int id) 
+        {
+            List<Ability> abilities = await _context.Beast
+                .Where(b => b.ID == id)
+                .SelectMany(b => b.Abilities).ToListAsync();
+            return abilities;
+        }
+
+
         // PUT: api/Abilities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

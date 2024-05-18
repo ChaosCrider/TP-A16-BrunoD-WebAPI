@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using TP_A16_BrunoD_WebAPI.Data;
 using TP_A16_BrunoD_WebAPI.Models;
 
@@ -41,6 +43,55 @@ namespace TP_A16_BrunoD_WebAPI.Controllers
 
             return beast;
         }
+
+        // GET: api/Beasts/Details/5
+        [HttpGet("Details/{id}")]
+        public async Task<ActionResult<string>> GetBeastDetails(int id) 
+        {
+            Beast beast = await _context.Beast.FindAsync(id);
+
+            if (beast == null)
+            {
+                return NotFound();
+            }
+
+            StringBuilder abilitiesDetails = new StringBuilder();
+            List<Ability> abilities = _context.Ability
+                .Where(x => x.Id == id).ToList();
+
+            foreach (Ability a in abilities)
+            {
+                abilitiesDetails.Append(a);
+            }
+
+
+            return String.Format("{0}{1}", beast, abilitiesDetails);
+
+        }
+
+
+        // GET: api/Beast/Sources
+        [HttpGet("Source")]
+        public async Task<ActionResult<List<String>>> GetSources() 
+        {
+            List<String> sources = await _context.Beast
+                .Select(x => x.Source)
+                .Distinct()
+                .ToListAsync();
+
+            return sources;
+        }
+
+
+        // GET: api/Beasts/Sources/<source>
+        [HttpGet("Sources/{source}")]
+        public async Task<ActionResult<List<Beast>>> GetBeastsBySource(string Source) 
+        {
+            List<Beast> beasts = _context.Beast
+                            .Where(b => b.Source == Source).ToList();
+            return new List<Beast>();
+        }
+
 
         // PUT: api/Beasts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
